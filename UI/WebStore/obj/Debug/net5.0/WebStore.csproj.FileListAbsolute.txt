@@ -492,3 +492,5 @@ C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Interfaces.d
 C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Services.dll
 C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Interfaces.pdb
 C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Services.pdb
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Clients.dll
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Clients.pdb

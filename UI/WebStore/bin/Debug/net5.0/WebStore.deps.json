@@ -32,6 +32,7 @@
           "Microsoft.EntityFrameworkCore.Design": "5.0.1",
           "Microsoft.VisualStudio.Web.BrowserLink": "2.2.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "5.0.1",
+          "WebStore.Clients": "1.0.0",
           "WebStore.DAL": "1.0.0",
           "WebStore.Domain": "1.0.0",
           "WebStore.Interfaces": "1.0.0",
@@ -2112,6 +2113,17 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0",
           "System.Xml.XmlDocument": "4.3.0"
+        }
+      },
+      "WebStore.Clients/1.0.0": {
+        "dependencies": {
+          "WebStore.Interfaces": "1.0.0"
+        },
+        "runtime": {
+          "WebStore.Clients.dll": {}
+        },
+        "compile": {
+          "WebStore.Clients.dll": {}
         }
       },
       "WebStore.DAL/1.0.0": {
@@ -4966,6 +4978,11 @@
       "sha512": "sha512-MYoTCP7EZ98RrANESW05J5ZwskKDoN0AuZ06ZflnowE50LTpbR5yRg3tHckTVm5j/m47stuGgCrCHWePyHS70Q==",
       "path": "system.xml.xmlserializer/4.3.0",
       "hashPath": "system.xml.xmlserializer.4.3.0.nupkg.sha512"
+    },
+    "WebStore.Clients/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "WebStore.DAL/1.0.0": {
       "type": "project",

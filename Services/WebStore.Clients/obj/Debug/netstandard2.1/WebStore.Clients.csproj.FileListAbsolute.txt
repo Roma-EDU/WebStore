@@ -1,0 +1,14 @@
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Clients.deps.json
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Clients.dll
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Clients.pdb
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Domain.dll
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Interfaces.dll
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Interfaces.pdb
+C:\Projects\External\WebStore\Services\WebStore.Clients\bin\Debug\netstandard2.1\WebStore.Domain.pdb
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.csprojAssemblyReference.cache
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.AssemblyInfoInputs.cache
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.AssemblyInfo.cs
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.csproj.CoreCompileInputs.cache
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.csproj.CopyComplete
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.dll
+C:\Projects\External\WebStore\Services\WebStore.Clients\obj\Debug\netstandard2.1\WebStore.Clients.pdb

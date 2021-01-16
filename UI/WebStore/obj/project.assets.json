@@ -2491,6 +2491,19 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
+      "WebStore.Clients/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.1",
+        "dependencies": {
+          "WebStore.Interfaces": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/WebStore.Clients.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/WebStore.Clients.dll": {}
+        }
+      },
       "WebStore.DAL/1.0.0": {
         "type": "project",
         "framework": ".NETStandard,Version=v2.1",
@@ -8246,6 +8259,11 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
+    "WebStore.Clients/1.0.0": {
+      "type": "project",
+      "path": "../../Services/WebStore.Clients/WebStore.Clients.csproj",
+      "msbuildProject": "../../Services/WebStore.Clients/WebStore.Clients.csproj"
+    },
     "WebStore.DAL/1.0.0": {
       "type": "project",
       "path": "../../Services/WebStore.DAL/WebStore.DAL.csproj",
@@ -8276,6 +8294,7 @@
       "Microsoft.EntityFrameworkCore.Design >= 5.0.1",
       "Microsoft.VisualStudio.Web.BrowserLink >= 2.2.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 5.0.1",
+      "WebStore.Clients >= 1.0.0",
       "WebStore.DAL >= 1.0.0",
       "WebStore.Domain >= 1.0.0",
       "WebStore.Interfaces >= 1.0.0",
@@ -8315,6 +8334,9 @@
           "projectReferences": {
             "C:\\Projects\\External\\WebStore\\Common\\WebStore.Domain\\WebStore.Domain.csproj": {
               "projectPath": "C:\\Projects\\External\\WebStore\\Common\\WebStore.Domain\\WebStore.Domain.csproj"
+            },
+            "C:\\Projects\\External\\WebStore\\Services\\WebStore.Clients\\WebStore.Clients.csproj": {
+              "projectPath": "C:\\Projects\\External\\WebStore\\Services\\WebStore.Clients\\WebStore.Clients.csproj"
             },
             "C:\\Projects\\External\\WebStore\\Services\\WebStore.DAL\\WebStore.DAL.csproj": {
               "projectPath": "C:\\Projects\\External\\WebStore\\Services\\WebStore.DAL\\WebStore.DAL.csproj"

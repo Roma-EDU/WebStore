@@ -64,23 +64,21 @@ namespace WebStore
                 opt.SlidingExpiration = true;
             });
             
-            //services.AddTransient<IService, ServiceImplementation>();
-            //services.AddScoped<IService, ServiceImplementation>();
-            //services.AddSingleton<IService, ServiceImplementation>();
-
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-            //services.AddTransient<IEmployeesData>(service => new InMemoryEmployeesData());
-            //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddTransient<IProductData, SqlProductData>();
             services.AddScoped<ICartService, InCookiesCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
 
-            //services.AddMvc(opt => opt.Conventions.Add(new WebStoreControllerConvention()));
+            services.AddHttpClient(Microsoft.Extensions.Options.Options.DefaultName, httpClient =>
+            {
+                httpClient.BaseAddress = new Uri(_Configuration["WebApiURL"]);
+                var accept = httpClient.DefaultRequestHeaders.Accept;
+                accept.Clear();
+                accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            });
+
             services
-               .AddControllersWithViews(opt =>
-                {
-                    //opt.Conventions.Add(new WebStoreControllerConvention());
-                })
+               .AddControllersWithViews()
                .AddRazorRuntimeCompilation();
         }
 

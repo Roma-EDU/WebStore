@@ -494,3 +494,6 @@ C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Interfaces.p
 C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Services.pdb
 C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Clients.dll
 C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Clients.pdb
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\System.Net.Http.Formatting.dll
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Projects\External\WebStore\UI\WebStore\obj\Debug\net5.0\Razor\Views\WebAPI\Index.cshtml.g.cs

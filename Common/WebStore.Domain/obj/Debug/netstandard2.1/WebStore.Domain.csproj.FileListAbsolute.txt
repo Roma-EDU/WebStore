@@ -6,3 +6,4 @@ C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\We
 C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.csproj.CoreCompileInputs.cache
 C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.dll
 C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.pdb
+C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.csprojAssemblyReference.cache

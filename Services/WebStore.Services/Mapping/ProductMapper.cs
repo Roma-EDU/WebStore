@@ -7,7 +7,7 @@ namespace WebStore.Infrastructure.Mapping
 {
     public static class ProductMapper
     {
-        public static ProductViewModel ToView(this Product p) => new()
+        public static ProductViewModel ToView(this Product p) => new ProductViewModel()
         {
             Id = p.Id,
             Name = p.Name,

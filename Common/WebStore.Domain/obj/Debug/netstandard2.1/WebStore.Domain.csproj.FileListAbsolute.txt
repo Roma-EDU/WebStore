@@ -1,7 +1,6 @@
 C:\Projects\External\WebStore\Common\WebStore.Domain\bin\Debug\netstandard2.1\WebStore.Domain.deps.json
 C:\Projects\External\WebStore\Common\WebStore.Domain\bin\Debug\netstandard2.1\WebStore.Domain.dll
 C:\Projects\External\WebStore\Common\WebStore.Domain\bin\Debug\netstandard2.1\WebStore.Domain.pdb
-C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.csprojAssemblyReference.cache
 C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.AssemblyInfoInputs.cache
 C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.AssemblyInfo.cs
 C:\Projects\External\WebStore\Common\WebStore.Domain\obj\Debug\netstandard2.1\WebStore.Domain.csproj.CoreCompileInputs.cache

@@ -488,3 +488,7 @@ C:\Projects\External\WebStore\UI\WebStore\obj\Debug\net5.0\WebStore.dll
 C:\Projects\External\WebStore\UI\WebStore\obj\Debug\net5.0\ref\WebStore.dll
 C:\Projects\External\WebStore\UI\WebStore\obj\Debug\net5.0\WebStore.pdb
 C:\Projects\External\WebStore\UI\WebStore\obj\Debug\net5.0\WebStore.genruntimeconfig.cache
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Interfaces.dll
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Services.dll
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Interfaces.pdb
+C:\Projects\External\WebStore\UI\WebStore\bin\Debug\net5.0\WebStore.Services.pdb

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using WebStore.Data;
+using WebStore.Services.Data;
 
 namespace WebStore.Controllers
 {

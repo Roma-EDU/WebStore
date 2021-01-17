@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebStore.Data;
+using WebStore.Services.Data;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
-using WebStore.Infrastructure.Interfaces;
+using WebStore.Interfaces.Services;
 
-namespace WebStore.Infrastructure.Services.InMemory
+namespace WebStore.Services.Services.InMemory
 {
     [Obsolete("Класс устарел потому что не надо размещать данные в памяти. Пользуйтесь классом SqlProductData", true)]
     public class InMemoryProductData : IProductData

@@ -1,8 +1,0 @@
-C:\Projects\External\WebStore\Services\WebStore.Services\bin\Debug\netstandard2.0\WebStore.Services.deps.json
-C:\Projects\External\WebStore\Services\WebStore.Services\bin\Debug\netstandard2.0\WebStore.Services.dll
-C:\Projects\External\WebStore\Services\WebStore.Services\bin\Debug\netstandard2.0\WebStore.Services.pdb
-C:\Projects\External\WebStore\Services\WebStore.Services\obj\Debug\netstandard2.0\WebStore.Services.AssemblyInfoInputs.cache
-C:\Projects\External\WebStore\Services\WebStore.Services\obj\Debug\netstandard2.0\WebStore.Services.AssemblyInfo.cs
-C:\Projects\External\WebStore\Services\WebStore.Services\obj\Debug\netstandard2.0\WebStore.Services.csproj.CoreCompileInputs.cache
-C:\Projects\External\WebStore\Services\WebStore.Services\obj\Debug\netstandard2.0\WebStore.Services.dll
-C:\Projects\External\WebStore\Services\WebStore.Services\obj\Debug\netstandard2.0\WebStore.Services.pdb

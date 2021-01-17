@@ -1,4 +1,0 @@
-C:\Projects\External\WebStore\Services\WebStore.Interfaces\obj\Debug\netstandard2.0\WebStore.Interfaces.csprojAssemblyReference.cache
-C:\Projects\External\WebStore\Services\WebStore.Interfaces\obj\Debug\netstandard2.0\WebStore.Interfaces.AssemblyInfoInputs.cache
-C:\Projects\External\WebStore\Services\WebStore.Interfaces\obj\Debug\netstandard2.0\WebStore.Interfaces.AssemblyInfo.cs
-C:\Projects\External\WebStore\Services\WebStore.Interfaces\obj\Debug\netstandard2.0\WebStore.Interfaces.csproj.CoreCompileInputs.cache

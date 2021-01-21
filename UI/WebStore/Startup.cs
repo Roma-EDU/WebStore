@@ -17,6 +17,7 @@ using WebStore.Services.Services.InMemory;
 using WebStore.Services.Services.InSQL;
 using WebStore.Interfaces.TestAPI;
 using WebStore.Clients.Employees;
+using WebStore.Clients.Products;
 
 namespace WebStore
 {
@@ -67,7 +68,7 @@ namespace WebStore
             });
             
             services.AddTransient<IEmployeesData, EmployeesClient>();
-            services.AddTransient<IProductData, SqlProductData>();
+            services.AddTransient<IProductData, ProductsClient>();
             services.AddScoped<ICartService, InCookiesCartService>();
             services.AddScoped<IOrderService, SqlOrderService>();
 

@@ -7,7 +7,7 @@ namespace WebStore.ServiceHosting.Controllers
 {
     [Route(ServiceAddress.Values)]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesApiController : ControllerBase
     {
         private static readonly List<string> _values = Enumerable.Range(1, 10).Select(i => $"Value {i:00}").ToList();
 

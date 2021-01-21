@@ -11,5 +11,16 @@ namespace WebStore.Interfaces
         public const string Values = WebApiBaseUrl + "values";
 
         public const string Employees = WebApiBaseUrl + "employees";
+
+        public static class Products
+        {
+            public const string Name = WebApiBaseUrl + "products";
+
+            public const string Brands = "brands";
+
+            public const string Sections = "sections";
+        }
+
+        
     }
 }

@@ -1,7 +1,7 @@
 ﻿@using WebStore.Domain.Entities.Identity
 <div class="shop-menu pull-right">
     <ul class="nav navbar-nav">
-        @if (User.IsInRole(Role.Administrator))
+        @if (User.IsInRole(Role.Administrator) || true)
         {
             <li>
                 <a asp-controller="Home" asp-action="Index" asp-area="Admin">

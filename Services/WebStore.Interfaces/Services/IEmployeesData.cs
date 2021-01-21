@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebStore.Domain.Models;
 
 namespace WebStore.Interfaces.Services
 {
     public interface IEmployeesData
     {
-        IEnumerable<Employee> Get();
+        Task<IEnumerable<Employee>> GetAsync();
 
-        Employee Get(int id);
+        Task<Employee> GetAsync(int id);
 
-        int Add(Employee employee);
+        Task<int> AddAsync(Employee employee);
 
-        void Update(Employee employee);
+        Task<bool> UpdateAsync(Employee employee);
 
-        bool Delete(int id);
+        Task<bool> DeleteAsync(int id);
     }
 }

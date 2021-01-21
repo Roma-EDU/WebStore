@@ -26,31 +26,31 @@ namespace WebStore.Clients.Base
             return $"{Address}/{url}";
         }
 
+        protected Task<T> GetAsync<T>(int id) => GetAsync<T>($"{id}");
         protected async Task<T> GetAsync<T>(string url = null)
         {
             var response = await HttpClient.GetAsync(buildUrl(url));
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadAsAsync<T>();
-            return result;
+            return await response.Content.ReadAsAsync<T>();
         }
 
         protected async Task<HttpResponseMessage> PostAsync<T>(T value, string url = null)
         {
-            var response = await HttpClient.PostAsJsonAsync<T>(buildUrl(url), value);
-            return response.EnsureSuccessStatusCode();
+            return await HttpClient.PostAsJsonAsync<T>(buildUrl(url), value);
         }
+
+        protected Task<HttpResponseMessage> PutAsync<T>(T value, int id) => PutAsync(value, $"{id}");
 
         protected async Task<HttpResponseMessage> PutAsync<T>(T value, string url = null)
         {
-            var response = await HttpClient.PutAsJsonAsync(buildUrl(url), value);
-            return response.EnsureSuccessStatusCode();
+            return await HttpClient.PutAsJsonAsync(buildUrl(url), value);
         }
 
+        protected Task<HttpResponseMessage> DeleteByIdAsync(int id) => DeleteAsync($"{id}");
         protected async Task<HttpResponseMessage> DeleteAsync(string url)
         {
-            var response = await HttpClient.DeleteAsync(buildUrl(url));
-            return response.EnsureSuccessStatusCode();
+            return await HttpClient.DeleteAsync(buildUrl(url));
         }
     }
 }

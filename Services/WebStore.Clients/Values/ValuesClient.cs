@@ -23,13 +23,13 @@ namespace WebStore.Clients.Values
 
         public async Task<string> GetAsync(int id)
         {
-            return await GetAsync<string>($"{id}");
+            return await GetAsync<string>(id);
         }
 
         public async Task<Uri> PostAsync(string value)
         {
             var result = await PostAsync(value, null);
-            return result.Headers.Location;
+            return result.EnsureSuccessStatusCode().Headers.Location;
         }
 
         public async Task<HttpStatusCode> UpdateAsync(int id, string value)
@@ -37,11 +37,11 @@ namespace WebStore.Clients.Values
             var result = await PutAsync(value, $"{id}");
             return result.StatusCode;
         }
-        public async Task<HttpStatusCode> DeleteAsync(int id)
+
+        async Task<HttpStatusCode> IValuesService.DeleteAsync(int id)
         {
-            var result = await DeleteAsync($"{id}");
+            var result = await DeleteByIdAsync(id);
             return result.StatusCode;
         }
-
     }
 }

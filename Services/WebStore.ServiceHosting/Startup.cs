@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebStore.Interfaces.Services;
+using WebStore.Services.Services.InMemory;
 
 namespace WebStore.ServiceHosting
 {
@@ -29,6 +31,8 @@ namespace WebStore.ServiceHosting
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStore.ServiceHosting", Version = "v1" });
             });
+
+            services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

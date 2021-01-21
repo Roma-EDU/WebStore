@@ -13,11 +13,10 @@ using WebStore.Services.Data;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Services.InCookies;
-using WebStore.Services.Services.InMemory;
-using WebStore.Services.Services.InSQL;
 using WebStore.Interfaces.TestAPI;
 using WebStore.Clients.Employees;
 using WebStore.Clients.Products;
+using WebStore.Clients.Orders;
 
 namespace WebStore
 {
@@ -70,7 +69,7 @@ namespace WebStore
             services.AddTransient<IEmployeesData, EmployeesClient>();
             services.AddTransient<IProductData, ProductsClient>();
             services.AddScoped<ICartService, InCookiesCartService>();
-            services.AddScoped<IOrderService, SqlOrderService>();
+            services.AddScoped<IOrderService, OrdersClient>();
 
             services.AddScoped<IValuesService, ValuesClient>();
             services.AddHttpClient(Microsoft.Extensions.Options.Options.DefaultName, httpClient =>

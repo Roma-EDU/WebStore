@@ -21,6 +21,12 @@ namespace WebStore.Interfaces
             public const string Sections = "sections";
         }
 
+        public static class Orders 
+        {
+            public const string Name = WebApiBaseUrl + "orders";
+
+            public const string Users = "users";
+        }
         
     }
 }

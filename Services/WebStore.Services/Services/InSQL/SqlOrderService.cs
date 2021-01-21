@@ -9,6 +9,8 @@ using WebStore.Domain.Entities.Identity;
 using WebStore.Domain.Entities.Orders;
 using WebStore.Interfaces.Services;
 using WebStore.Domain.ViewModels;
+using WebStore.Services.Mapping;
+using WebStore.Domain.DTOs.Orders;
 
 namespace WebStore.Services.Services.InSQL
 {
@@ -23,18 +25,20 @@ namespace WebStore.Services.Services.InSQL
             _UserManager = UserManager;
         }
 
-        public async Task<IEnumerable<Order>> GetUserOrders(string UserName) => await _db.Orders
+        public async Task<IEnumerable<OrderDto>> GetUserOrders(string UserName) => (await _db.Orders
            .Include(order => order.User)
            .Include(order => order.Items)
            .Where(order => order.User.UserName == UserName)
-           .ToArrayAsync();
+           .ToArrayAsync())
+           .ToDto();
 
-        public async Task<Order> GetOrderById(int id) => await _db.Orders
+        public async Task<OrderDto> GetOrderById(int id) => (await _db.Orders
            .Include(order => order.User)
            .Include(order => order.Items)
-           .FirstOrDefaultAsync(order => order.Id == id);
+           .FirstOrDefaultAsync(order => order.Id == id))
+           .ToDto();
 
-        public async Task<Order> CreateOrder(string UserName, CartViewModel Cart, OrderViewModel OrderModel)
+        public async Task<OrderDto> CreateOrder(string UserName, CreateOrderModel OrderModel)
         {
             var user = await _UserManager.FindByNameAsync(UserName);
             if (user is null)
@@ -44,17 +48,18 @@ namespace WebStore.Services.Services.InSQL
 
             var order = new Order
             {
-                Name = OrderModel.Name,
-                Address = OrderModel.Address,
-                Phone = OrderModel.Phone,
+                Name = OrderModel.OrderVM.Name,
+                Address = OrderModel.OrderVM.Address,
+                Phone = OrderModel.OrderVM.Phone,
                 User = user,
                 Date = DateTime.Now,
             };
 
-            foreach (var (product_model, quantity) in Cart.Items)
+            foreach (var (id, _, quantity) in OrderModel.Items)
             {
-                var product = await _db.Products.FindAsync(product_model.Id);
-                if (product is null) continue;
+                var product = await _db.Products.FindAsync(id);
+                if (product is null) 
+                    continue;
 
                 var order_item = new OrderItem
                 {
@@ -72,7 +77,7 @@ namespace WebStore.Services.Services.InSQL
 
             await transaction.CommitAsync();
 
-            return order;
+            return order.ToDto();
         }
     }
 }

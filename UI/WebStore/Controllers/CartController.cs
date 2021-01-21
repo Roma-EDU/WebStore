@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebStore.Interfaces.Services;
 using WebStore.Domain.ViewModels;
+using WebStore.Domain.DTOs.Orders;
+using System.Linq;
 
 namespace WebStore.Controllers
 {
@@ -57,10 +59,19 @@ namespace WebStore.Controllers
                     Order = OrderModel
                 });
 
+            var newOrderModel = new CreateOrderModel(
+                OrderModel, 
+                _CartService.TransformFromCart().Items
+                    .Select(i => new OrderItemDto(
+                        i.Product.Id, 
+                        i.Product.Price, 
+                        i.Quantity))
+                    .ToList()
+            );
+
             var order = await OrderService.CreateOrder(
-                User.Identity!.Name, 
-                _CartService.TransformFromCart(), 
-                OrderModel);
+                User.Identity!.Name,
+                newOrderModel);
             
             _CartService.Clear();
             

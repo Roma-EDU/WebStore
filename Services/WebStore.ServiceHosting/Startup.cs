@@ -66,6 +66,7 @@ namespace WebStore.ServiceHosting
 
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             services.AddTransient<IProductData, SqlProductData>();
+            services.AddScoped<IOrderService, SqlOrderService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

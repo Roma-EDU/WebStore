@@ -4,6 +4,7 @@ using System.Linq;
 using WebStore.Services.Data;
 using WebStore.Interfaces.Services;
 using WebStore.Domain.Models;
+using System.Threading.Tasks;
 
 namespace WebStore.Services.Services.InMemory
 {
@@ -33,22 +34,23 @@ namespace WebStore.Services.Services.InMemory
             return employee.Id;
         }
 
-        public void Update(Employee employee)
+        public bool Update(Employee employee)
         {
             if (employee is null)
                 throw new ArgumentNullException(nameof(employee));
 
             if (_Employees.Contains(employee))
-                return;
+                return true;
 
             var db_item = Get(employee.Id);
-            if(db_item is null)
-                return;
+            if (db_item is null)
+                return false;
 
             db_item.LastName = employee.LastName;
             db_item.FirstName = employee.FirstName;
             db_item.Patronymic = employee.Patronymic;
             db_item.Age = employee.Age;
+            return true;
         }
 
         public bool Delete(int id)
@@ -56,6 +58,31 @@ namespace WebStore.Services.Services.InMemory
             var item = Get(id);
             if (item is null) return false;
             return _Employees.Remove(item);
+        }
+
+        Task<IEnumerable<Employee>> IEmployeesData.GetAsync()
+        {
+            return Task.FromResult(Get());
+        }
+
+        Task<Employee> IEmployeesData.GetAsync(int id)
+        {
+            return Task.FromResult(Get(id));
+        }
+
+        Task<int> IEmployeesData.AddAsync(Employee employee)
+        {
+            return Task.FromResult(Add(employee));
+        }
+
+        Task<bool> IEmployeesData.UpdateAsync(Employee employee)
+        {
+            return Task.FromResult(Update(employee));
+        }
+
+        Task<bool> IEmployeesData.DeleteAsync(int id)
+        {
+            return Task.FromResult(Delete(id));
         }
     }
 }

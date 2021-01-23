@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebStore.Clients.Base
@@ -27,28 +28,31 @@ namespace WebStore.Clients.Base
         }
 
         protected Task<T> GetAsync<T>(int id) => GetAsync<T>($"{id}");
-        protected async Task<T> GetAsync<T>(string url = null)
+        protected Task<T> GetAsync<T>(string url = null) => GetAsync<T>(url, CancellationToken.None);
+        protected async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken)
         {
-            var response = await HttpClient.GetAsync(buildUrl(url));
+            var response = await HttpClient.GetAsync(buildUrl(url), cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<T>();
+            return await response.Content.ReadAsAsync<T>(cancellationToken);
         }
 
-        protected async Task<HttpResponseMessage> PostAsync<T>(T value, string url = null)
+        protected Task<HttpResponseMessage> PostAsync<T>(T value, string url = null) => PostAsync(value, url, CancellationToken.None);
+        protected async Task<HttpResponseMessage> PostAsync<T>(T value, string url, CancellationToken cancellationToken)
         {
-            return await HttpClient.PostAsJsonAsync<T>(buildUrl(url), value);
+            return await HttpClient.PostAsJsonAsync<T>(buildUrl(url), value, cancellationToken);
         }
 
         protected Task<HttpResponseMessage> PutAsync<T>(T value, int id) => PutAsync(value, $"{id}");
-
-        protected async Task<HttpResponseMessage> PutAsync<T>(T value, string url = null)
+        protected Task<HttpResponseMessage> PutAsync<T>(T value, string url = null) => PutAsync(value, url, CancellationToken.None);
+        protected async Task<HttpResponseMessage> PutAsync<T>(T value, string url, CancellationToken cancellationToken)
         {
-            return await HttpClient.PutAsJsonAsync(buildUrl(url), value);
+            return await HttpClient.PutAsJsonAsync(buildUrl(url), value, cancellationToken);
         }
 
         protected Task<HttpResponseMessage> DeleteByIdAsync(int id) => DeleteAsync($"{id}");
-        protected async Task<HttpResponseMessage> DeleteAsync(string url)
+        protected Task<HttpResponseMessage> DeleteAsync(string url) => DeleteAsync(url, CancellationToken.None);
+        protected async Task<HttpResponseMessage> DeleteAsync(string url, CancellationToken cancellationToken)
         {
             return await HttpClient.DeleteAsync(buildUrl(url));
         }

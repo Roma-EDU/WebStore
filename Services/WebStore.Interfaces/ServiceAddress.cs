@@ -39,8 +39,6 @@ namespace WebStore.Interfaces
                 public const string NormalUserName = "normalUserName";
 
                 public const string User = "user";
-                public const string CreateUser = User;
-                public const string EditUser = User;
                 public const string DeleteUser = User + "/delete";
                 public const string FindById = User + "/find";
                 public const string FindByName = User + "/normal";

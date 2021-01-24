@@ -65,7 +65,7 @@ namespace WebStore.Clients.Identity
         }
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.CreateUser, cancellationToken).ConfigureAwait(false);
+            var response = await PostAsync(user, UsersIdentityAddress.User, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             var success = await response.Content.ReadAsAsync<bool>(cancellationToken);
@@ -74,7 +74,7 @@ namespace WebStore.Clients.Identity
 
         public async Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PutAsync(user, UsersIdentityAddress.EditUser, cancellationToken).ConfigureAwait(false);
+            var response = await PutAsync(user, UsersIdentityAddress.User, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             var success = await response.Content.ReadAsAsync<bool>(cancellationToken);
@@ -273,6 +273,7 @@ namespace WebStore.Clients.Identity
 
             user.NormalizedEmail = normalizedEmail;
         }
+
         #endregion
 
         #region IUserPhoneNumberStore

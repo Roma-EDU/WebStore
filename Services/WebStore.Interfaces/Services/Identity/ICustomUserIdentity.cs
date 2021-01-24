@@ -10,6 +10,7 @@ namespace WebStore.Interfaces.Services.Identity
 {
     /// <summary> Интерфейс для подмены встроенной AspNetCore.Identity на собственную </summary>
     public interface ICustomUserIdentity : 
+        IUserStore<User>,
         IUserRoleStore<User>,
         IUserClaimStore<User>,
         IUserPasswordStore<User>,

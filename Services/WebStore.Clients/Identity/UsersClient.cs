@@ -268,8 +268,8 @@ namespace WebStore.Clients.Identity
 
         public async Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.SetNormalizedEmail, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
+            var response = await PostAsync(user, $"{UsersIdentityAddress.SetNormalizedEmail}/{normalizedEmail}", cancellationToken).ConfigureAwait(false);
+            //response.EnsureSuccessStatusCode(); - для нового пользователя normalizedEmail = null и запрос отвергается
 
             user.NormalizedEmail = normalizedEmail;
         }

@@ -3,20 +3,18 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebStore.Clients.Employees;
+using WebStore.Clients.Identity;
+using WebStore.Clients.Orders;
+using WebStore.Clients.Products;
 using WebStore.Clients.Values;
-using WebStore.DAL.Context;
-using WebStore.Services.Data;
 using WebStore.Domain.Entities.Identity;
 using WebStore.Interfaces.Services;
-using WebStore.Services.Services.InCookies;
 using WebStore.Interfaces.TestAPI;
-using WebStore.Clients.Employees;
-using WebStore.Clients.Products;
-using WebStore.Clients.Orders;
+using WebStore.Services.Services.InCookies;
 
 namespace WebStore
 {
@@ -28,11 +26,8 @@ namespace WebStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(_Configuration.GetConnectionString("Default")));
-            services.AddTransient<WebStoreDbInitializer>();
-
             services.AddIdentity<User, Role>(/*opt => { }*/)
-               .AddEntityFrameworkStores<WebStoreDB>()
+               .AddCustomWebStoreIdentity()
                .AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(opt =>
@@ -85,10 +80,8 @@ namespace WebStore
                .AddRazorRuntimeCompilation();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            db.Initialize();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

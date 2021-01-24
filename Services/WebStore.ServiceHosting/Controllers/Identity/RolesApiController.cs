@@ -50,27 +50,27 @@ namespace WebStore.ServiceHosting.Controllers.Identity
             return result;
         }
 
-        [HttpPost(RolesIdentityAddress.GetRoleName)]
+        [HttpPost(RolesIdentityAddress.RoleName)]
         public async Task<string> GetRoleNameAsync([FromBody] Role role)
         {
             var result = await _roleStore.GetRoleNameAsync(role);
             return result;
         }
 
-        [HttpPost(RolesIdentityAddress.SetRoleName + "/{roleName}")]
+        [HttpPost(RolesIdentityAddress.RoleName + "/{roleName}")]
         public Task SetRoleNameAsync([FromBody] Role role, string roleName)
         {
             return _roleStore.SetRoleNameAsync(role, roleName);
         }
 
-        [HttpPost(RolesIdentityAddress.GetNormalizedRoleName)]
+        [HttpPost(RolesIdentityAddress.NormalizedRoleName)]
         public async Task<string> GetNormalizedRoleNameAsync([FromBody] Role role)
         {
             var result = await _roleStore.GetRoleNameAsync(role);
             return result;
         }
 
-        [HttpPost(RolesIdentityAddress.SetNormalizedRoleName + "/{normalizedName}")]
+        [HttpPost(RolesIdentityAddress.NormalizedRoleName + "/{normalizedName}")]
         public Task SetNormalizedRoleNameAsync([FromBody] Role role, string normalizedName)
         {
             return _roleStore.SetNormalizedRoleNameAsync(role, normalizedName);

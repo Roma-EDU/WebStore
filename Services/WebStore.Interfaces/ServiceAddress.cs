@@ -107,12 +107,7 @@ namespace WebStore.Interfaces
                 public const string GetRoleId = "getId";
 
                 public const string RoleName = "name";
-                public const string GetRoleName = RoleName + "/get";
-                public const string SetRoleName = RoleName + "/set";
-
                 public const string NormalizedRoleName = "normalizedName";
-                public const string GetNormalizedRoleName = NormalizedRoleName + "/get";
-                public const string SetNormalizedRoleName = NormalizedRoleName + "/set";
 
                 public const string FindById = "findById";
                 public const string FindByName = "findByName";

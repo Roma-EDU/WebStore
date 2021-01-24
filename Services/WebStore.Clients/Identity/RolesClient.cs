@@ -50,13 +50,13 @@ namespace WebStore.Clients.Identity
 
         public async Task<string> GetRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(role, RolesIdentityAddress.GetRoleName, cancellationToken).ConfigureAwait(false);
+            var result = await PostAsync(role, RolesIdentityAddress.RoleName, cancellationToken).ConfigureAwait(false);
             return await result.Content.ReadAsAsync<string>(cancellationToken);
         }
 
         public async Task SetRoleNameAsync(Role role, string roleName, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(role, $"{RolesIdentityAddress.SetRoleName}/{roleName}", cancellationToken).ConfigureAwait(false);
+            var response = await PostAsync(role, $"{RolesIdentityAddress.RoleName}/{roleName}", cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             role.Name = roleName;
@@ -64,13 +64,13 @@ namespace WebStore.Clients.Identity
 
         public async Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(role, RolesIdentityAddress.GetNormalizedRoleName, cancellationToken).ConfigureAwait(false);
+            var result = await PostAsync(role, RolesIdentityAddress.NormalizedRoleName, cancellationToken).ConfigureAwait(false);
             return await result.Content.ReadAsAsync<string>(cancellationToken);
         }
 
         public async Task SetNormalizedRoleNameAsync(Role role, string normalizedName, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(role, $"{RolesIdentityAddress.SetNormalizedRoleName}/{normalizedName}", cancellationToken).ConfigureAwait(false);
+            var response = await PostAsync(role, $"{RolesIdentityAddress.NormalizedRoleName}/{normalizedName}", cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             role.NormalizedName = normalizedName;

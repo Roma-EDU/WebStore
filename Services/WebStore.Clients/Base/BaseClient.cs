@@ -42,6 +42,18 @@ namespace WebStore.Clients.Base
         {
             return await HttpClient.PostAsJsonAsync<T>(buildUrl(url), value, cancellationToken);
         }
+        protected async Task<TResult> PostAndReadAsync<TValue, TResult>(TValue value, string url, CancellationToken cancellationToken)
+        {
+            var response = await PostAsync(value, url, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsAsync<TResult>(cancellationToken);
+        }
+        protected async Task PostAndEnsureAsync<T>(T value, string url, CancellationToken cancellationToken)
+        {
+            var response = await PostAsync(value, url, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+        }
 
         protected Task<HttpResponseMessage> PutAsync<T>(T value, int id) => PutAsync(value, $"{id}");
         protected Task<HttpResponseMessage> PutAsync<T>(T value, string url = null) => PutAsync(value, url, CancellationToken.None);

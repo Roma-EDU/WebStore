@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using WebStore.Clients.Base;
 using WebStore.Domain.DTOs.Identity;
 using WebStore.Domain.Entities.Identity;
-using WebStore.Interfaces;
 using WebStore.Interfaces.Services.Identity;
 using UsersIdentityAddress = WebStore.Interfaces.ServiceAddress.Identity.Users;
 
@@ -27,48 +24,32 @@ namespace WebStore.Clients.Identity
 
         public async Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.UserId, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.UserId, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.UserName, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.UserName, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.UserName}/{userName}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.UserName = userName;
+            user.UserName = await PostAndReadAsync<User, string>(user, $"{UsersIdentityAddress.UserName}/{userName}", cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.NormalUserName, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.NormalUserName, cancellationToken).ConfigureAwait(false);
         }
+
         public async Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.NormalUserName}/{normalizedName}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.NormalizedUserName = normalizedName;
+            user.NormalizedUserName = await PostAndReadAsync<User, string>(user, $"{UsersIdentityAddress.NormalUserName}/{normalizedName}", cancellationToken).ConfigureAwait(false);
         }
+
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.User, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            var success = await response.Content.ReadAsAsync<bool>(cancellationToken);
+            var success = await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.User, cancellationToken).ConfigureAwait(false);
             return success ? IdentityResult.Success : IdentityResult.Failed();
         }
 
@@ -83,10 +64,7 @@ namespace WebStore.Clients.Identity
 
         public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.DeleteUser, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            var success = await response.Content.ReadAsAsync<bool>(cancellationToken);
+            var success = await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.DeleteUser, cancellationToken).ConfigureAwait(false);
             return success ? IdentityResult.Success : IdentityResult.Failed();
         }
 
@@ -104,28 +82,14 @@ namespace WebStore.Clients.Identity
 
         #region IUserRoleStore
 
-        public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
-        {
-            return PostAsync(user, $"{UsersIdentityAddress.AddToRole}/{roleName}", cancellationToken);
-        }
-
-        public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
-        {
-            return PostAsync(user, $"{UsersIdentityAddress.RemoveFromRole}/{roleName}", cancellationToken);
-        }
-
         public async Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.Roles, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsAsync<IList<string>>(cancellationToken);
+            return await PostAndReadAsync<User, IList<string>>(user, UsersIdentityAddress.Roles, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, $"{UsersIdentityAddress.InRole}/{roleName}", cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<bool>(cancellationToken);
+            return await PostAndReadAsync<User, bool>(user, $"{UsersIdentityAddress.InRole}/{roleName}", cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
@@ -133,32 +97,37 @@ namespace WebStore.Clients.Identity
             return await GetAsync<List<User>>($"{UsersIdentityAddress.UsersInRole}/{roleName}", cancellationToken);
         }
 
+        public async Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            await PostAndEnsureAsync(user, $"{UsersIdentityAddress.AddToRole}/{roleName}", cancellationToken);
+        }
+
+        public async Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            await PostAndEnsureAsync(user, $"{UsersIdentityAddress.RemoveFromRole}/{roleName}", cancellationToken);
+        }
+
         #endregion
 
         #region IUserPasswordStore
 
-        public async Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
+        public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(new PasswordHashDto()
-            {
-                User = user,
-                Hash = passwordHash
-            }, UsersIdentityAddress.SetPasswordHash, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.PasswordHash = passwordHash;
+            return await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.HasPassword, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, UsersIdentityAddress.GetPasswordHash, cancellationToken).ConfigureAwait(false);
-            return await response.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.GetPasswordHash, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
+        public async Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.HasPassword, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<bool>(cancellationToken);
+            user.PasswordHash = await PostAndReadAsync<PasswordHashDto, string>(new PasswordHashDto()
+            {
+                User = user,
+                Hash = passwordHash
+            }, UsersIdentityAddress.SetPasswordHash, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -167,22 +136,26 @@ namespace WebStore.Clients.Identity
 
         public async Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetClaims, cancellationToken);
-            return await result.Content.ReadAsAsync<List<Claim>>(cancellationToken);
+            return await PostAndReadAsync<User, IList<Claim>>(user, UsersIdentityAddress.GetClaims, cancellationToken);
         }
 
-        public Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        public async Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
         {
-            return PostAsync(new AddClaimsDto()
+            return await PostAndReadAsync<Claim, List<User>>(claim, UsersIdentityAddress.UsersForClaim, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        {
+            await PostAndEnsureAsync(new AddClaimsDto()
             {
                 User = user,
                 Claims = claims
             }, UsersIdentityAddress.AddClaims, cancellationToken);
         }
 
-        public Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+        public async Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
         {
-            return PostAsync(new ReplaceClaimsDto()
+            await PostAndEnsureAsync(new ReplaceClaimsDto()
             {
                 User = user,
                 OldClaim = claim,
@@ -190,88 +163,66 @@ namespace WebStore.Clients.Identity
             }, UsersIdentityAddress.ReplaceClaim, cancellationToken);
         }
 
-        public Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        public async Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
         {
-            return PostAsync(new RemoveClaimsDto()
+            await PostAndEnsureAsync(new RemoveClaimsDto()
             {
                 User = user,
                 Claims = claims
             }, UsersIdentityAddress.RemoveClaims, cancellationToken);
         }
 
-        public async Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
-        {
-            var result = await PostAsync(claim, UsersIdentityAddress.UsersForClaim, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<List<User>>(cancellationToken);
-        }
-
         #endregion
 
         #region IUserTwoFactorStore
 
-        public async Task SetTwoFactorEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
-        {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetTwoFactorEnabled}/{enabled}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.TwoFactorEnabled = enabled;
-        }
-
         public async Task<bool> GetTwoFactorEnabledAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetTwoFactorEnabled, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<bool>(cancellationToken);
+            return await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.GetTwoFactorEnabled, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task SetTwoFactorEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+        {
+            user.TwoFactorEnabled = await PostAndReadAsync<User, bool>(user, $"{UsersIdentityAddress.SetTwoFactorEnabled}/{enabled}", cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
 
         #region IUserEmailStore
 
-        public async Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
-        {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetEmail}/{email}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.Email = email;
-        }
-
         public async Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetEmail, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.GetEmail, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
+        {
+            user.Email = await PostAndReadAsync<User, string>(user, $"{UsersIdentityAddress.SetEmail}/{email}", cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetEmailConfirmed, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<bool>(cancellationToken);
+            return await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.GetEmailConfirmed, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetEmailConfirmed}/{confirmed}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.EmailConfirmed = confirmed;
+            user.EmailConfirmed = await PostAndReadAsync<User, bool>(user, $"{UsersIdentityAddress.SetEmailConfirmed}/{confirmed}", cancellationToken).ConfigureAwait(false);
         }
 
-        public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public async Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            return GetAsync<User>($"{UsersIdentityAddress.FindByEmail}/{normalizedEmail}", cancellationToken);
+            return await GetAsync<User>($"{UsersIdentityAddress.FindByEmail}/{normalizedEmail}", cancellationToken);
         }
 
         public async Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetNormalizedEmail, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.GetNormalizedEmail, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetNormalizedEmail}/{normalizedEmail}", cancellationToken).ConfigureAwait(false);
-            //response.EnsureSuccessStatusCode(); - для нового пользователя normalizedEmail = null и запрос отвергается
-
-            user.NormalizedEmail = normalizedEmail;
+            user.NormalizedEmail = await PostAndReadAsync<User, string>(user, $"{UsersIdentityAddress.SetNormalizedEmail}/{normalizedEmail}", cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
@@ -280,39 +231,31 @@ namespace WebStore.Clients.Identity
 
         public async Task SetPhoneNumberAsync(User user, string phoneNumber, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetPhoneNumber}/{phoneNumber}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.PhoneNumber = phoneNumber;
+            user.PhoneNumber = await PostAndReadAsync<User, string>(user, $"{UsersIdentityAddress.SetPhoneNumber}/{phoneNumber}", cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<string> GetPhoneNumberAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetPhoneNumber, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<string>(cancellationToken);
+            return await PostAndReadAsync<User, string>(user, UsersIdentityAddress.GetPhoneNumber, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<bool> GetPhoneNumberConfirmedAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetPhoneNumberConfirmed, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<bool>(cancellationToken);
+            return await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.GetPhoneNumberConfirmed, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SetPhoneNumberConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetPhoneNumberConfirmed}/{confirmed}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.PhoneNumberConfirmed = confirmed;
+            user.PhoneNumberConfirmed = await PostAndReadAsync<User, bool>(user, $"{UsersIdentityAddress.SetPhoneNumberConfirmed}/{confirmed}", cancellationToken).ConfigureAwait(false);
         }
 
         #endregion
 
         #region IUserLoginStore
 
-        public Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
+        public async Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
         {
-            return PostAsync(new AddLoginDto()
+            await PostAndEnsureAsync(new AddLoginDto()
             {
                 User = user,
                 UserLoginInfo = login
@@ -326,8 +269,7 @@ namespace WebStore.Clients.Identity
 
         public async Task<IList<UserLoginInfo>> GetLoginsAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetLogins, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<List<UserLoginInfo>>(cancellationToken);
+            return await PostAndReadAsync<User, List<UserLoginInfo>>(user, UsersIdentityAddress.GetLogins, cancellationToken).ConfigureAwait(false);
         }
 
         public Task<User> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
@@ -341,51 +283,41 @@ namespace WebStore.Clients.Identity
 
         public async Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetLockoutEndDate, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<DateTimeOffset?>(cancellationToken);
+            return await PostAndReadAsync<User, DateTimeOffset?>(user, UsersIdentityAddress.GetLockoutEndDate, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(new SetLockoutDto()
+            user.LockoutEnd = await PostAndReadAsync<SetLockoutDto, DateTimeOffset?>(new SetLockoutDto()
             {
                 User = user,
                 LockoutEnd = lockoutEnd
             }, UsersIdentityAddress.SetLockoutEndDate, cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.LockoutEnd = lockoutEnd;
         }
 
         public async Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.IncrementAccessFailedCount, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<int>(cancellationToken);
+            return await PostAndReadAsync<User, int>(user, UsersIdentityAddress.IncrementAccessFailedCount, cancellationToken).ConfigureAwait(false);
         }
 
-        public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        public async Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
         {
-            return PostAsync(user, UsersIdentityAddress.ResetAccessFailedCount, cancellationToken);
+            await PostAndEnsureAsync(user, UsersIdentityAddress.ResetAccessFailedCount, cancellationToken);
         }
 
         public async Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetAccessFailedCount, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<int>(cancellationToken);
+            return await PostAndReadAsync<User, int>(user, UsersIdentityAddress.GetAccessFailedCount, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
         {
-            var result = await PostAsync(user, UsersIdentityAddress.GetLockoutEnabled, cancellationToken).ConfigureAwait(false);
-            return await result.Content.ReadAsAsync<bool>(cancellationToken);
+            return await PostAndReadAsync<User, bool>(user, UsersIdentityAddress.GetLockoutEnabled, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
         {
-            var response = await PostAsync(user, $"{UsersIdentityAddress.SetLockoutEnabled}/{enabled}", cancellationToken).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            user.LockoutEnabled = enabled;
+            user.LockoutEnabled = await PostAndReadAsync<User, bool>(user, $"{UsersIdentityAddress.SetLockoutEnabled}/{enabled}", cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

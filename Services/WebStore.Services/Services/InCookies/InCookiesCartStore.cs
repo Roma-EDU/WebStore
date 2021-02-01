@@ -40,7 +40,11 @@ namespace WebStore.Services.Services.InCookies
                 }
 
                 //ReplaceCookies(cookies, cart_cookie);
-                return JsonConvert.DeserializeObject<Cart>(cart_cookie);
+                var existingCart = JsonConvert.DeserializeObject<Cart>(cart_cookie);
+                var itemsToRemove = existingCart.Items.Where(i => i.Quantity < 1).ToArray();
+                foreach (var itemToRemove in itemsToRemove)
+                    existingCart.Items.Remove(itemToRemove);
+                return existingCart;
             }
             set => ReplaceCookies(_HttpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value));
         }

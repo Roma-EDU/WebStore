@@ -175,17 +175,5 @@ namespace WebStore.Tests.Controllers
 
             AssertExt.IsType<ViewResult>(result);
         }
-
-
-        /*
-        public IActionResult Index() => View(new CartOrderViewModel
-        {
-            Cart = _CartService.TransformFromCart()
-        });
-
-
-         */
-
-
     }
 }

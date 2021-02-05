@@ -1,60 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Http;
-
-using Newtonsoft.Json;
+﻿using System.Linq;
 using WebStore.Domain;
 using WebStore.Domain.Entities;
+using WebStore.Domain.ViewModels;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Mapping;
-using WebStore.Domain.ViewModels;
 
-namespace WebStore.Services.Services.InCookies
+namespace WebStore.Services.Services
 {
-    public class InCookiesCartService : ICartService
+    public class CartService : ICartService
     {
         private readonly IProductData _ProductData;
-        private readonly IHttpContextAccessor _HttpContextAccessor;
-        private readonly string _CartName;
+        private readonly ICartStore _cartStore;
+
+        public CartService(IProductData productData, ICartStore cartStore)
+        {
+            _ProductData = productData;
+            _cartStore = cartStore;
+        }
 
         private Cart Cart
         {
-            get
-            {
-                var context = _HttpContextAccessor.HttpContext;
-                var cookies = context!.Response.Cookies;
-                var cart_cookie = context.Request.Cookies[_CartName];
-                if (cart_cookie is null)
-                {
-                    var cart = new Cart();
-                    cookies.Append(_CartName, JsonConvert.SerializeObject(cart));
-                    return cart;
-                }
-
-                //ReplaceCookies(cookies, cart_cookie);
-                return JsonConvert.DeserializeObject<Cart>(cart_cookie);
-            }
-            set => ReplaceCookies(_HttpContextAccessor.HttpContext!.Response.Cookies, JsonConvert.SerializeObject(value));
-        }
-
-        private void ReplaceCookies(IResponseCookies cookies, string cookie)
-        {
-            cookies.Delete(_CartName);
-            cookies.Append(_CartName, cookie);
-        }
-
-        public InCookiesCartService(IProductData ProductData, IHttpContextAccessor HttpContextAccessor)
-        {
-            _ProductData = ProductData;
-            _HttpContextAccessor = HttpContextAccessor;
-
-            var user = HttpContextAccessor.HttpContext!.User;
-            var user_name = user.Identity!.IsAuthenticated ? $"-{user.Identity.Name}" : null;
-
-            _CartName = $"WebStore.Cart{user_name}";
+            get => _cartStore.Cart;
+            set => _cartStore.Cart = value;
         }
 
         public void AddToCart(int id)

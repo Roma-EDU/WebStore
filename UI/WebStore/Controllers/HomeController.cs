@@ -7,10 +7,6 @@ namespace WebStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IConfiguration _Configuration;
-
-        public HomeController(IConfiguration Configuration) => _Configuration = Configuration;
-
         public IActionResult Index() => View();
 
         public IActionResult Throw(string id) => throw new ApplicationException(id);
@@ -24,15 +20,19 @@ namespace WebStore.Controllers
         
         public IActionResult BlogSingle() => View();
         
-        public IActionResult Cart() => View();
-        
-        public IActionResult Checkout() => View();
-        
         public IActionResult ContactUs() => View();
-        
-        public IActionResult ProductDetails() => View();
-        
-        public IActionResult Shop() => View();
-        
+
+        public IActionResult Error404() => View();
+
+        public IActionResult ErrorStatus(string statusCode)
+        {
+            switch (statusCode)
+            {
+                case "404":
+                    return RedirectToAction(nameof(Error404));
+                default:
+                    return Content($"Ошибка {statusCode}");
+            }
+        }
     }
 }

@@ -81,11 +81,15 @@ namespace WebStore.Services.Services
                 Ids = Cart.Items.Select(item => item.ProductId).ToArray()
             });
 
-            var product_view_models = products.ToView().ToDictionary(p => p.Id);
+            var product_view_models = products.ToView();
 
             return new CartViewModel
             {
-                Items = Cart.Items.Select(item => (product_view_models[item.ProductId], item.Quantity))
+                Items = Cart.Items.Join(product_view_models,
+                    cartItem => cartItem.ProductId,
+                    productVM => productVM.Id,
+                    (cartItem, productVM) => (productVM, cartItem.Quantity)
+                )
             };
         }
     }

@@ -89,7 +89,7 @@ namespace WebStore.Services.Services
                     cartItem => cartItem.ProductId,
                     productVM => productVM.Id,
                     (cartItem, productVM) => (productVM, cartItem.Quantity)
-                )
+                ).ToArray()
             };
         }
     }

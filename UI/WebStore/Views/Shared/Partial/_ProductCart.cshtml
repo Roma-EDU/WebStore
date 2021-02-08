@@ -14,7 +14,10 @@
                         @Model.Name
                     </a>
                 </p>
-                <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" 
+                <a asp-controller="Cart" 
+                   asp-action="AddToCart" 
+                   asp-route-id="@Model.Id" 
+                   data-product-id="@Model.Id" 
                    class="btn btn-default add-to-cart">
                     <i class="fa fa-shopping-cart"></i>Добавить в корзину
                 </a>
@@ -30,7 +33,10 @@
                             @Model.Name
                         </a>
                     </p>
-                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.Id" 
+                    <a asp-controller="Cart" 
+                       asp-action="AddToCart" 
+                       asp-route-id="@Model.Id" 
+                       data-product-id="@Model.Id"
                        class="btn btn-default add-to-cart">
                         <i class="fa fa-shopping-cart"></i>Добавить в корзину
                     </a>

@@ -10,3 +10,15 @@
 <environment exclude="Development">
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
+
+<script src="~/js/logic/cart.js" asp-append-version="true"></script>
+
+<script>
+    $(function () {
+        Cart.init({
+            getCartViewLink: "@Url.Action("GetCartView", "Cart")",
+            addToCartLink: "@Url.Action("AddToCartAPI", "Cart")",
+        });
+    });
+
+</script>

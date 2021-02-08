@@ -1,0 +1,10 @@
+﻿@model WebStore.Domain.ViewModels.CartViewModel
+@{
+    var itemsCount = Model.ItemsCount;
+    var countText = itemsCount > 0 ? $"({itemsCount})" : null;
+}
+
+<a asp-controller="Cart" asp-action="Index">
+    <i class="fa fa-shopping-cart"></i> Корзина @countText
+</a>
+

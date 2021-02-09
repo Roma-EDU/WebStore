@@ -97,20 +97,19 @@ namespace WebStore.Controllers
             return Ok();
             return Ok(new { id, message = $"Товар id={id} был добавлен в корзину" });
             */
-
-            return Ok();
+            return GetActualStateJson(id);
         }
 
         public IActionResult RemoveFromCartAPI(int id)
         {
             _CartService.RemoveFromCart(id);
-            return Ok();
+            return GetActualStateJson(id);
         }
 
         public IActionResult DecrementFromCartAPI(int id)
         {
             _CartService.DecrementFromCart(id);
-            return Ok();
+            return GetActualStateJson(id);
         }
 
         public IActionResult ClearAPI()
@@ -119,6 +118,23 @@ namespace WebStore.Controllers
             return Ok();
         }
 
+        private JsonResult GetActualStateJson(int productId)
+        {
+            var cartVM = _CartService.TransformFromCart();
+            var cartItem = cartVM.Items.FirstOrDefault(i => i.Product.Id == productId);
+
+            var itemTotalPrice = 0m;
+            if (cartItem.Product != null)
+                itemTotalPrice = cartItem.Product.Price * cartItem.Quantity;
+
+            //TODO Можно было бы для всех продуктов таблицу актуализировать, но пока оставим только выбранный с изменяемым количеством
+            return Json(new { 
+                id = productId,
+                quantity = cartItem.Quantity,
+                itemTotalPrice = itemTotalPrice.ToString("C"),
+                orderTotalPrice = cartVM.TotalPrice.ToString("C")
+            });
+        }
 
         #endregion
 

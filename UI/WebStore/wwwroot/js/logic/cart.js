@@ -1,7 +1,9 @@
 ﻿Cart = {
     _properties: {
         getCartViewLink: "",
-        addToCartLink: ""
+        addToCartLink: "",
+        decrementLink: "",
+        removeFromCartLink: "",
     },
 
     init: function (properties) {
@@ -9,8 +11,8 @@
 
         $(".add-to-cart").click(Cart.addToCart);
         $(".cart_quantity_up").click(Cart.incrementItem);
-        $(".cart_quantity_down").click(Cart.addToCart);
-        $(".cart_quantity_delete").click(Cart.addToCart);
+        $(".cart_quantity_down").click(Cart.decrementItem);
+        $(".cart_quantity_delete").click(Cart.removeItem);
     },
 
     addToCart: function (event) {
@@ -57,20 +59,79 @@
         console.log(message);
     },
 
-
     incrementItem: function (event) {
-        //отменяем стандартное поведение: переход при клике по ссылке
         event.preventDefault();
 
         var button = $(this);
         const id = button.data("productId");
 
+        //Ближайший родительский элемент с типом - строка таблицы
+        var container = button.closest("tr");
+
         $.get(Cart._properties.addToCartLink + "/" + id)
-            .done(function () {
-                Cart.showToolTip(button);
+            .done(function (actualStateJson) {
+                
+                $(".cart_quantity_input", container).val(actualStateJson.quantity);
+                Cart.refreshPrice(container, actualStateJson.itemTotalPrice);
+                Cart.refreshTotalPrice(actualStateJson.orderTotalPrice);
+
                 Cart.refreshCartView();
             })
-            .fail(function () { Cart.logError("addToCart failed") });
+            .fail(function () { Cart.logError("incrementItem failed") });
     },
 
+    refreshPrice: function (container, itemTotalPriceText) {
+        const cartTotalPrice = $(".cart_total_price", container);
+        cartTotalPrice.html(itemTotalPriceText);
+    },
+
+    refreshTotalPrice: function (totalPriceText) {
+        $("#total-order-price").html(totalPriceText);
+    },
+
+    decrementItem: function (event) {
+        event.preventDefault();
+
+        var button = $(this);
+        const id = button.data("productId");
+
+        //Ближайший родительский элемент с типом - строка таблицы
+        var container = button.closest("tr");
+
+        $.get(Cart._properties.decrementLink + "/" + id)
+            .done(function (actualStateJson) {
+
+                if (actualStateJson.quantity > 0) {
+                    $(".cart_quantity_input", container).val(actualStateJson.quantity);
+                    Cart.refreshPrice(container, actualStateJson.itemTotalPrice);
+                }
+                else {
+                    container.remove();
+                }
+                Cart.refreshTotalPrice(actualStateJson.orderTotalPrice);
+
+                Cart.refreshCartView();
+            })
+            .fail(function () { Cart.logError("decrementItem failed") });
+    },
+
+    removeItem: function (event) {
+        event.preventDefault();
+
+        var button = $(this);
+        const id = button.data("productId");
+
+        //Ближайший родительский элемент с типом - строка таблицы
+        var container = button.closest("tr");
+
+        $.get(Cart._properties.removeFromCartLink + "/" + id)
+            .done(function (actualStateJson) {
+
+                container.remove();
+                Cart.refreshTotalPrice(actualStateJson.orderTotalPrice);
+
+                Cart.refreshCartView();
+            })
+            .fail(function () { Cart.logError("removeItem failed") });
+    },
 }

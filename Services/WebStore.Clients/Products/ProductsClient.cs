@@ -34,13 +34,13 @@ namespace WebStore.Clients.Products
             return GetAsync<ProductDto>(id).Result;
         }
 
-        public IEnumerable<ProductDto> GetProducts(ProductFilter filter = null)
+        public PagedProductDto GetProducts(ProductFilter filter = null)
         {
             //В запрос передаётся сложные объект ProductFilter, поэтому вместо Get-запроса 
             //отправляем его в теле запроса методом Post
             //Плюс для случая Null (т.к. не сериализуется) заменяем фильтр на пустой объект
             var response = PostAsync(filter ?? new ProductFilter()).Result;
-            return response.EnsureSuccessStatusCode().Content.ReadAsAsync<IEnumerable<ProductDto>>().Result;
+            return response.EnsureSuccessStatusCode().Content.ReadAsAsync<PagedProductDto>().Result;
         }
 
         public SectionDto GetSectionById(int id)

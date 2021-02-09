@@ -58,7 +58,8 @@ namespace WebStore.Services.Services
             var cart = Cart;
             var item = cart.Items.FirstOrDefault(i => i.ProductId == id);
 
-            if (item is null) return;
+            if (item is null) 
+                return;
 
             cart.Items.Remove(item);
 
@@ -76,16 +77,22 @@ namespace WebStore.Services.Services
 
         public CartViewModel TransformFromCart()
         {
+            var cart = Cart;
+
             var products = _ProductData.GetProducts(new ProductFilter
             {
-                Ids = Cart.Items.Select(item => item.ProductId).ToArray()
+                Ids = cart.Items.Select(item => item.ProductId).ToArray()
             });
 
-            var product_view_models = products.ToView().ToDictionary(p => p.Id);
+            var product_view_models = products.Products.ToView();
 
             return new CartViewModel
             {
-                Items = Cart.Items.Select(item => (product_view_models[item.ProductId], item.Quantity))
+                Items = cart.Items.Join(product_view_models,
+                    cartItem => cartItem.ProductId,
+                    productVM => productVM.Id,
+                    (cartItem, productVM) => (productVM, cartItem.Quantity)
+                ).ToArray()
             };
         }
     }

@@ -2,7 +2,7 @@
 @inject IProductData ProductData
 @{
     var products = ProductData
-        .GetProducts()
+        .GetProducts().Products
         .OrderBy(p => p.Order)
         .Take(6)
         .Select(p => new ProductViewModel

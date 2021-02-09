@@ -28,7 +28,7 @@ namespace WebStore.Controllers.API
             nodes.AddRange(productData.GetBrands().Select(b => new SitemapNode(Url.Action(nameof(CatalogController.Shop), "Catalog", new { BrandId = b.Id }))));
             
             //Id продукта записан в сам маршрут
-            nodes.AddRange(productData.GetProducts().Select(p => new SitemapNode(Url.Action(nameof(CatalogController.Details), "Catalog", new { p.Id }))));
+            nodes.AddRange(productData.GetProducts().Products.Select(p => new SitemapNode(Url.Action(nameof(CatalogController.Details), "Catalog", new { p.Id }))));
 
             return new SitemapProvider().CreateSitemap(new SitemapModel(nodes));
         }

@@ -83,5 +83,60 @@ namespace WebStore.Controllers
             ViewBag.OrderId = id;
             return View();
         }
+
+        #region Update View Async API
+
+        public IActionResult GetCartView() => ViewComponent("Cart");
+
+        public IActionResult AddToCartAPI(int id)
+        {
+            _CartService.AddToCart(id);
+
+            /* Вернём любой результат, которым будем пользоваться
+            return Json(new { id, message = $"Товар id={id} был добавлен в корзину" });
+            return Ok();
+            return Ok(new { id, message = $"Товар id={id} был добавлен в корзину" });
+            */
+            return GetActualStateJson(id);
+        }
+
+        public IActionResult RemoveFromCartAPI(int id)
+        {
+            _CartService.RemoveFromCart(id);
+            return GetActualStateJson(id);
+        }
+
+        public IActionResult DecrementFromCartAPI(int id)
+        {
+            _CartService.DecrementFromCart(id);
+            return GetActualStateJson(id);
+        }
+
+        public IActionResult ClearAPI()
+        {
+            _CartService.Clear();
+            return Ok();
+        }
+
+        private JsonResult GetActualStateJson(int productId)
+        {
+            var cartVM = _CartService.TransformFromCart();
+            var cartItem = cartVM.Items.FirstOrDefault(i => i.Product.Id == productId);
+
+            var itemTotalPrice = 0m;
+            if (cartItem.Product != null)
+                itemTotalPrice = cartItem.Product.Price * cartItem.Quantity;
+
+            //TODO Можно было бы для всех продуктов таблицу актуализировать, но пока оставим только выбранный с изменяемым количеством
+            return Json(new { 
+                id = productId,
+                quantity = cartItem.Quantity,
+                itemTotalPrice = itemTotalPrice.ToString("C"),
+                orderTotalPrice = cartVM.TotalPrice.ToString("C")
+            });
+        }
+
+        #endregion
+
     }
 }

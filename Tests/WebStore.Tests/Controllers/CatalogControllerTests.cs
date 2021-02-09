@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using WebStore.Controllers;
@@ -26,6 +27,16 @@ namespace WebStore.Tests.Controllers
             );
         }
 
+        private IConfiguration _configuration;
+
+        [TestInitialize]
+        public void Init()
+        {
+            var configurationMock = new Mock<IConfiguration>();
+            configurationMock.Setup(c => c[It.IsAny<string>()]).Returns("3");
+            _configuration = configurationMock.Object;
+        }
+
         [DataTestMethod]
         [DataRow(5, 7)]
         [DataRow(3, null)]
@@ -40,13 +51,14 @@ namespace WebStore.Tests.Controllers
                 createDto(2, 2, 2),
                 createDto(3, 3, 3),
             };
+            var pagedProducts = new PagedProductDto(products, products.Length);
 
             var productDataMock = new Mock<IProductData>();
             productDataMock
                 .Setup(p => p.GetProducts(It.IsAny<ProductFilter>()))
-                .Returns(products);
+                .Returns(pagedProducts);
 
-            var controller = new CatalogController(productDataMock.Object);
+            var controller = new CatalogController(productDataMock.Object, _configuration);
 
             //Act
             var result = controller.Shop(brandId, sectionId);
@@ -73,13 +85,14 @@ namespace WebStore.Tests.Controllers
                 createDto(1, 1, 1),
                 createDto(2, 2, 2),
             };
+            var pageProducts = new PagedProductDto(products, products.Length);
 
             var productDataMock = new Mock<IProductData>();
             productDataMock
                 .Setup(p => p.GetProducts(It.IsAny<ProductFilter>()))
-                .Returns(products);
+                .Returns(pageProducts);
 
-            var controller = new CatalogController(productDataMock.Object);
+            var controller = new CatalogController(productDataMock.Object, _configuration);
             var filter = new ProductFilter() { Ids = new[] { 3, 6, 12 } };
 
             //Act
@@ -109,7 +122,7 @@ namespace WebStore.Tests.Controllers
                 .Setup(p => p.GetProductById(It.IsAny<int>()))
                 .Returns<ProductDto>(null);
 
-            var controller = new CatalogController(productDataMock.Object);
+            var controller = new CatalogController(productDataMock.Object, _configuration);
 
             //Act
             var result = controller.Details(nullProductId);
@@ -131,7 +144,7 @@ namespace WebStore.Tests.Controllers
                 .Setup(p => p.GetProductById(It.IsAny<int>()))
                 .Returns(productDto);
 
-            var controller = new CatalogController(productDataMock.Object);
+            var controller = new CatalogController(productDataMock.Object, _configuration);
 
             // Act
             var result = controller.Details(productId);

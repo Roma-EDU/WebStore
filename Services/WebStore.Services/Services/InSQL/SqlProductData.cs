@@ -33,7 +33,7 @@ namespace WebStore.Services.Services.InSQL
            .FirstOrDefault(b => b.Id == id)
            .ToDto();
 
-        public IEnumerable<ProductDto> GetProducts(ProductFilter Filter = null)
+        public PagedProductDto GetProducts(ProductFilter Filter = null)
         {
             IQueryable<Product> query = _db.Products
                 .Include(p => p.Brand)
@@ -50,7 +50,17 @@ namespace WebStore.Services.Services.InSQL
                     query = query.Where(product => product.SectionId == Filter.SectionId);
             }
 
-            return query.AsEnumerable().ToDto();
+            var totalCount = query.Count();
+
+            if (Filter?.PageSize > 0 && Filter?.Page > 0)
+            {
+                int page = Filter.Page > 0 ? Filter.Page : 1;
+                int itemsToSkip = (page - 1) * (int)Filter.PageSize;
+                query = query.Skip(itemsToSkip).Take((int)Filter.PageSize);
+            }
+
+            var productDtos = query.AsEnumerable().ToDto();
+            return new PagedProductDto(productDtos, totalCount);
         }
 
         public ProductDto GetProductById(int id) => _db.Products

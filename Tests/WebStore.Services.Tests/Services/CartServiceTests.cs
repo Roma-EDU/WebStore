@@ -275,9 +275,10 @@ namespace WebStore.Services.Tests.Services
                 createDto(productId1, price1),
                 createDto(productId2, price2),
             };
+            var pagedProducts = new PagedProductDto(products, products.Count);
 
             var productData = new Mock<IProductData>();
-            productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>())).Returns(products);
+            productData.Setup(c => c.GetProducts(It.IsAny<ProductFilter>())).Returns(pagedProducts);
             
             var cartStore = new Mock<ICartStore>();
             cartStore.Setup(c => c.Cart).Returns(cart);

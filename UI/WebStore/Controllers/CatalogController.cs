@@ -4,42 +4,56 @@ using WebStore.Domain;
 using WebStore.Interfaces.Services;
 using WebStore.Services.Mapping;
 using WebStore.Domain.ViewModels;
+using Microsoft.Extensions.Configuration;
 
 namespace WebStore.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly IProductData _ProductData;
+        private readonly IProductData _productData;
+        private readonly IConfiguration _configuration;
 
-        public CatalogController(IProductData ProductData) => _ProductData = ProductData;
-
-        public IActionResult Shop(int? BrandId, int? SectionId)
+        public CatalogController(IProductData productData, IConfiguration configuration)
         {
-            var filter = new ProductFilter
+            _productData = productData;
+            _configuration = configuration;
+        }
+
+        public IActionResult Shop(int? BrandId, int? SectionId, int Page = 1, int? PageSize = null)
+        {
+            var pageSize = PageSize ?? (int.TryParse(_configuration["CatalogPageSize"], out var value) ? value : null);
+            var pageProducts = _productData.GetProducts(new ProductFilter
             {
                 BrandId = BrandId,
                 SectionId = SectionId,
-            };
-
-            var products = _ProductData.GetProducts(filter);
-
-            return View(new CatalogViewModel
-            {
-                SectionId = SectionId,
-                BrandId = BrandId,
-                Products = products.OrderBy(p => p.Order).ToView()
+                Page = Page,
+                PageSize = pageSize,
             });
+
+            var model = new CatalogViewModel()
+            {
+                SectionId = SectionId,
+                BrandId = BrandId,
+                Products = pageProducts.Products.OrderBy(p => p.Order).ToView(),
+                PageViewModel = new PageViewModel
+                {
+                    PageNumber = Page,
+                    PageSize = pageSize ?? 0,
+                    TotalItems = pageProducts.TotalCount,
+                }
+            };
+            return View(model);
         }
 
         public IActionResult Shop2(ProductFilter filter)
         {
-            var products = _ProductData.GetProducts(filter);
+            var products = _productData.GetProducts(filter);
 
             return View("Shop", new CatalogViewModel
             {
                 SectionId = filter.SectionId,
                 BrandId = filter.BrandId,
-                Products = products
+                Products = products.Products
                    .OrderBy(p => p.Order)
                    .Select(p => new ProductViewModel
                     {
@@ -53,7 +67,7 @@ namespace WebStore.Controllers
         
         public IActionResult Details(int id)
         {
-            var product = _ProductData.GetProductById(id);
+            var product = _productData.GetProductById(id);
 
             if (product is null)
                 return NotFound();
